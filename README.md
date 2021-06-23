@@ -1,2 +1,3 @@
-# GaiaComponents
-A module for componentized structure.
+# Description
+
+A module for component-style design.
