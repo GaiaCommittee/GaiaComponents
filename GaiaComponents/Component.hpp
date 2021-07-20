@@ -109,6 +109,18 @@ namespace Gaia::Components
         }
 
         /**
+         * @brief Check whether this component has the sub component of the given type or not.
+         * @tparam ComponentType Type of sub component.
+         * @retval true This component has a sub component of the given type.
+         * @retval false This component does not have a sub component of the given type.
+         */
+        template <typename ComponentType>
+        bool HasComponent()
+        {
+            return GetSubComponent(typeid(ComponentType).hash_code()) != nullptr;
+        }
+
+        /**
          * @brief Add a sub component to this component.
          * @tparam ComponentType The type of the component to construct and add.
          * @tparam ConstructorArguments The types of arguments to pass to the sub component constructor.
