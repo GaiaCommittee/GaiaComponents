@@ -18,6 +18,9 @@ endif()
 #==============================
 
 set(TARGET_NAME "GaiaComponents")
+set(TARGET_VERSION 0.9.0)
+set(INSTALL_NAMESPACE "Gaia")
+set(INSTALL_NAME "Components")
 
 #==============================
 # Command Lines
@@ -74,6 +77,9 @@ find_hpp(${CMAKE_CURRENT_SOURCE_DIR} TARGET_HEADER)
 
 add_library(${TARGET_NAME} SHARED ${TARGET_SOURCE} ${TARGET_HEADER} ${TARGET_CUDA_SOURCE} ${TARGET_CUDA_HEADER})
 
+# Set version property.
+set_target_properties(${TARGET_NAME} PROPERTIES VERSION ${TARGET_VERSION})
+
 # Enable 'DEBUG' Macro in Debug Mode
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     target_compile_definitions(${TARGET_NAME} PRIVATE -DDEBUG)
@@ -94,10 +100,20 @@ endif()
 # Install Scripts
 #===============================
 
+configure_file(
+        "${PROJECT_SOURCE_DIR}/${TARGET_NAME}Config.hpp.in"
+        "${PROJECT_BINARY_DIR}/${TARGET_NAME}Config.hpp")
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 # Install executable files and libraries to 'default_path/'.
 install(TARGETS ${TARGET_NAME}
+        EXPORT ${TARGET_NAME}-targets
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
         ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 # Install header files to 'default_path/TARGET_NAME/'
 install(DIRECTORY "." DESTINATION ${CMAKE_INSTALL_PREFIX}/include/${TARGET_NAME}/ FILES_MATCHING PATTERN "*.hpp")
+install(EXPORT ${TARGET_NAME}-targets
+        NAMESPACE ${INSTALL_NAMESPACE}::
+        FILE ${TARGET_NAME}Config.cmake
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/${TARGET_NAME})
