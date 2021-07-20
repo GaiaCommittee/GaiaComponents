@@ -102,6 +102,12 @@ namespace Gaia::Components
         /// Destructor which will invoke OnDetachedFromComponent() for all existing sub components.
         virtual ~Component();
 
+        /// Get all sub components of this component.
+        [[nodiscard]] const decltype(SubComponents)& GetComponents() const noexcept
+        {
+            return SubComponents;
+        }
+
         /**
          * @brief Add a sub component to this component.
          * @tparam ComponentType The type of the component to construct and add.
@@ -163,6 +169,21 @@ namespace Gaia::Components
             static_assert(std::is_base_of_v<Component, ComponentType>,
                           "ComponentType must be derived from Component.");
             return dynamic_cast<ComponentType*>(GetSubComponent(typeid(ComponentType).hash_code()));
+        }
+
+        /**
+         * @brief Get or create the component if it does not exist.
+         * @tparam ComponentType Component type to acquire.
+         * @return Pointer to the desired component.
+         */
+        template <typename ComponentType>
+        ComponentType* AcquireComponent()
+        {
+            static_assert(std::is_base_of_v<Component, ComponentType>,
+                          "ComponentType must be derived from Component.");
+            auto* component = GetComponent<ComponentType>();
+            if (component) return component;
+            return AddComponent<ComponentType>();
         }
 
         /**
