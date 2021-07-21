@@ -20,7 +20,6 @@ endif()
 set(TARGET_NAME "GaiaComponents")
 set(TARGET_VERSION 0.9.0)
 set(INSTALL_NAMESPACE "Gaia")
-set(INSTALL_NAME "Components")
 
 #==============================
 # Command Lines
